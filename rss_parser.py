@@ -6,13 +6,12 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from celery import Celery
 
-# Configure the Celery app (using Redis as the broker)
+# Configure the Celery app using Redis
 app = Celery('tasks', broker='redis://localhost:6379/0')
 
-# Set up logging
 logging.basicConfig(filename='rss_app.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
-# RSS feeds
+# List of given RSS feeds
 rss_feeds = [
     'http://rss.cnn.com/rss/cnn_topstories.rss',
     'http://qz.com/feed',
@@ -22,7 +21,7 @@ rss_feeds = [
     'https://feeds.bbci.co.uk/news/world/asia/india/rss.xml'
 ]
 
-# Database setup (change credentials according to your MySQL setup)
+# Database setup
 DATABASE_URL = "mysql+pymysql://bigh:bigh123@localhost/news_db"
 
 engine = create_engine(DATABASE_URL)
@@ -46,7 +45,7 @@ class Article(Base):
 Base.metadata.create_all(engine)
 
 def parse_rss_feed(feed_url):
-    """Parse the RSS feed and return a list of articles."""
+    """Parsing the RSS feed and returning a list of articles."""
     feed = feedparser.parse(feed_url)
     articles = []
     for entry in feed.entries:
@@ -69,7 +68,7 @@ def parse_rss_feed(feed_url):
     return articles
 
 def fetch_all_feeds(feed_urls):
-    """Fetch and parse multiple RSS feeds."""
+    """Fetching and parsing multiple RSS feeds."""
     all_articles = []
     for url in feed_urls:
         try:
@@ -81,7 +80,7 @@ def fetch_all_feeds(feed_urls):
     return all_articles
 
 def save_article(session, article_data):
-    """Save article to the database if not a duplicate."""
+    """Saving article to the database if not a duplicate."""
     existing_article = session.query(Article).filter_by(link=article_data['link']).first()
     if not existing_article:
         new_article = Article(
@@ -103,7 +102,7 @@ def save_article(session, article_data):
 
 @app.task
 def process_article(article_id):
-    """Process and classify article content."""
+    """Processing and classifying article content."""
     article = session.query(Article).filter_by(id=article_id).first()
     if article:
         # Call the classification function
@@ -112,7 +111,7 @@ def process_article(article_id):
         session.commit()
 
 def classify_article(content):
-    """Classify the article content into predefined categories."""
+    """Classifying the article content into predefined categories."""
     content = content.lower()
     if any(word in content for word in ['terrorism', 'protest', 'riot', 'political unrest']):
         return 'Terrorism/Protest/Political Unrest/Riot'
@@ -124,7 +123,7 @@ def classify_article(content):
         return 'Others'
 
 def process_all_articles():
-    """Fetch articles, save to DB, and classify them using Celery."""
+    """Fetching articles, saving to DB, and classifying them using Celery."""
     articles = fetch_all_feeds(rss_feeds)
     for article_data in articles:
         save_article(session, article_data)
