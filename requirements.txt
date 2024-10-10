@@ -1,0 +1,5 @@
+feedparser==6.0.10
+SQLAlchemy==2.0.20
+pymysql==1.0.3
+celery==5.3.4
+redis==4.6.0
