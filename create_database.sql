@@ -1,1 +1,13 @@
+CREATE DATABASE IF NOT EXISTS news_db;
+
+USE news_db;
+
+CREATE TABLE IF NOT EXISTS articles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    published DATETIME,
+    link VARCHAR(255) NOT NULL UNIQUE,
+    category VARCHAR(100)
+);
 
