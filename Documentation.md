@@ -1,6 +1,6 @@
 ### Problem Statement
 
-The goal of this project is to build an application that collects news articles from various RSS feeds, stores them in a MySQL database, and categorizes them into predefined categories such as:
+The goal of thsi project is to build an application that collects news articles from various RSS feeds, stores them in a MySQL database, and categorizes them into predefined categories such as:
 - Terrorism/Protest/Political Unrest/Riot
 - Positive/Uplifting
 - Natural Disasters
@@ -14,8 +14,8 @@ The program addresses the challenge of efficiently fetching news articles, stori
 
 #### 1. **RSS Feed Parsing**
    - The program uses the `feedparser` library to fetch and parse RSS feeds. 
-   - Feeds are provided in a list, and each feed is processed one by one. Each article's title, content, publication date, and link are extracted.
-   - Error handling is included to ensure that network issues or feed errors are logged but do not crash the program.
+   - Feeds are provided in a list, and each feed is processed one by one. Each articles title, content, publication date, and link are extracted.
+   - Error handling is included to ensure that netwokr issues or feed errors are logged but do not crash the program.
 
 #### 2. **Database Design**
    - The data is stored in a MySQL database, with a table designed to store articles. The table schema includes fields like `title`, `content`, `published date`, `link` (which is unique), and `category`.
